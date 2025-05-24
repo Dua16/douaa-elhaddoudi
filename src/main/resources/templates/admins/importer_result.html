@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Résultat de l'importation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #98b2ca, #98b2ca);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            margin-top: 60px;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .table {
+            background: rgba(255,255,255,0.9);
+            color: black;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+<div class="text-center mt-4">
+    <a th:href="@{/admins/importer}" class="btn btn-warning me-2">📂 Importer d'autres textes</a>
+    <a th:href="@{/admins/annotateurs}" class="btn btn-outline-light">⬅ Retour à la liste des annotateurs</a>
+</div>
+
+<div class="container">
+    <h2 class="text-center mb-4">✅ Importation Réussie !</h2>
+
+    <p><strong>Nom du fichier importé :</strong> <span th:text="${nomFichier}"></span></p>
+    <p><strong>Nombre de couples importés :</strong> <span th:text="${taille}"></span></p>
+
+    <form th:action="@{/admins/valider-importation}" enctype="multipart/form-data" method="post">
+        <div class="mb-3">
+            <input class="form-control" type="file" name="file" accept=".csv,.json" required>
+        </div>
+
+        <input type="hidden" name="nomDataset" th:value="${nomFichier}"/>
+        <input type="hidden" name="taille" th:value="${taille}"/>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description du dataset :</label>
+            <textarea class="form-control" id="description" name="description" rows="3" ></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="nomClassePossible" class="form-label">Classe Possible par défaut :</label>
+            <input type="text" class="form-control" id="nomClassePossible" name="nomClassePossible" required>
+        </div>
+
+
+        <button type="submit" class="btn btn-success">✅ Valider l'importation</button>
+    </form>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-striped table-hover shadow">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Texte 1</th>
+                <th>Texte 2</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="couple : ${couples}">
+                <td th:text="${couple.id}"></td>
+                <td th:text="${couple.texte1}"></td>
+                <td th:text="${couple.texte2}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</body>
+</html>

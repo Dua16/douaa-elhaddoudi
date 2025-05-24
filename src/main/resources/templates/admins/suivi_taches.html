@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Suivi des Tâches</title>
+
+  <!-- Bootstrap + Icônes -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    /* Fond dégradé bleu clair */
+    body {
+      background: linear-gradient(135deg, #7493af 0%, #1b437c 100%);
+      color: #1b437c;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .card-container {
+      width: 100%;
+      max-width: 900px;
+      animation: fadeInScale 0.8s ease forwards;
+    }
+
+    /* Carte blanche avec ombre et coins arrondis */
+    .custom-card {
+      background: white;
+      color: #1b437c;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(27, 67, 124, 0.3);
+      padding: 25px 30px;
+      overflow-x: auto;
+    }
+
+    /* Titres en dégradé texte */
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2rem;
+      background: linear-gradient(90deg, #1b437c, #1b437c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: none;
+      animation: slideInDown 1s ease forwards;
+    }
+
+    /* Table stylisée */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      font-weight: 600;
+    }
+
+    thead th {
+      background: linear-gradient(45deg, #1b437c, #7493af);
+      color: white;
+      padding: 12px 15px;
+      border-radius: 15px 15px 0 0;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    tbody tr {
+      background: #e6f0ff;
+      transition: background-color 0.3s ease;
+      border-radius: 15px;
+    }
+
+    tbody tr:hover {
+      background: #c2d7ff;
+    }
+
+    tbody td {
+      padding: 14px 15px;
+      vertical-align: middle;
+      white-space: nowrap;
+      color: #1b437c;
+    }
+
+    /* Statuts colorés avec coins arrondis */
+    .status-non-commencee {
+      background-color: #ffcccc;
+      color: #a83232;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 12px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .status-en-cours {
+      background-color: #fff1b8;
+      color: #665c00;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 12px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .status-termine {
+      background-color: #c7f0d1;
+      color: #1a5f34;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 12px;
+      display: inline-block;
+      user-select: none;
+    }
+
+    /* Pagination stylisée */
+    .pagination {
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .pagination .page-link {
+      color: #1b437c;
+      background-color: #e6f0ff;
+      border-radius: 12px;
+      margin: 0 4px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      user-select: none;
+    }
+
+    .pagination .page-link:hover {
+      background-color: #7493af;
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(27, 67, 124, 0.3);
+      cursor: pointer;
+    }
+
+    .pagination .page-item.disabled .page-link {
+      color: #a0a9bb;
+      pointer-events: none;
+      cursor: default;
+      background-color: #f0f4fb;
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: #1b437c;
+      color: white;
+      font-weight: 700;
+      cursor: default;
+      box-shadow: 0 6px 12px rgba(27, 67, 124, 0.5);
+    }
+
+    /* Bouton retour */
+    .btn-outline-info {
+      color: #1b437c;
+      border-color: #7493af;
+      font-weight: 600;
+      border-radius: 50px;
+      padding: 8px 25px;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .btn-outline-info:hover {
+      background: #7493af;
+      color: white;
+      border-color: #1b437c;
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(27, 67, 124, 0.4);
+    }
+
+    /* Animations clés */
+    @keyframes fadeInScale {
+      0% {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideInDown {
+      0% {
+        transform: translateY(-40px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="container card-container">
+  <h2><i class="bi bi-check2-square me-2"></i>Suivi des Tâches Attribuées</h2>
+
+  <div class="custom-card">
+    <!-- Table -->
+    <table class="table table-hover table-bordered text-center align-middle">
+      <thead>
+      <tr>
+        <th>ID Tâche</th>
+        <th>Nom Dataset</th>
+        <th>Annotateur</th>
+        <th>Avancement</th>
+        <th>Date d'affectation</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="tache : ${taches}"
+          th:with="status=${tache.statusTexte}, cssClass=${tache.statusClasse}">
+        <td th:text="${tache.id}">10</td>
+        <td th:text="${tache.getDataset().getNomDataset()}">Dataset</td>
+        <td th:text="${tache.annotateur.nom + ' ' + tache.annotateur.prenom}">Nom Prénom</td>
+        <td th:text="${status}" th:classappend="${cssClass}"></td>
+        <td th:text="${#temporals.format(tache.dateAffectation, 'dd/MM/yyyy HH:mm')}">15/05/2025 14:00</td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(taches)}">
+        <td colspan="4" class="text-center text-muted fst-italic">Aucune tâche trouvée.</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav th:if="${totalPages > 1}" class="mt-4" aria-label="Pagination">
+      <ul class="pagination">
+        <!-- Précédent -->
+        <li class="page-item" th:classappend="${pageCourante == 0} ? ' disabled'">
+          <a class="page-link" th:href="@{/admins/suivi_taches(page=${pageCourante - 1}, size=10)}" aria-label="Précédent">
+            <i class="bi bi-chevron-left"></i>
+          </a>
+        </li>
+
+        <!-- Première page -->
+        <li class="page-item" th:classappend="${pageCourante == 0} ? ' active'">
+          <a class="page-link" th:href="@{/admins/suivi_taches(page=0, size=10)}">1</a>
+        </li>
+
+        <!-- ... avant -->
+        <li class="page-item disabled" th:if="${pageCourante > 3}">
+          <span class="page-link">...</span>
+        </li>
+
+        <!-- Pages autour -->
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence(
+                (pageCourante > 2 ? pageCourante - 2 : 1),
+                (pageCourante + 2 < totalPages - 1 ? pageCourante + 2 : totalPages - 2)
+              )}"
+            th:classappend="${i == pageCourante} ? ' active'">
+          <a class="page-link" th:href="@{/admins/suivi_taches(page=${i}, size=10)}" th:text="${i + 1}">2</a>
+        </li>
+
+        <!-- ... après -->
+        <li class="page-item disabled" th:if="${pageCourante < totalPages - 4}">
+          <span class="page-link">...</span>
+        </li>
+
+        <!-- Dernière page -->
+        <li class="page-item" th:classappend="${pageCourante == totalPages - 1} ? ' active'">
+          <a class="page-link" th:href="@{/admins/suivi_taches(page=${totalPages - 1}, size=10)}"
+             th:text="${totalPages}">Dernière</a>
+        </li>
+
+        <!-- Suivant -->
+        <li class="page-item" th:classappend="${pageCourante == totalPages - 1} ? ' disabled'">
+          <a class="page-link" th:href="@{/admins/suivi_taches(page=${pageCourante + 1}, size=10)}" aria-label="Suivant">
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Bouton retour -->
+    <div class="d-flex justify-content-center mt-4">
+      <a class="btn btn-outline-info" th:href="@{/admins/index}">
+        <i class="bi bi-arrow-left-circle me-2"></i>Retour au menu
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

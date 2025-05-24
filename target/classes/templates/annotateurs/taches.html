@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Liste des Tâches</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #7493af 0%, #1b437c 100%);
+            margin: 0;
+            padding: 40px 0;
+            color: #1b437c;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(27, 67, 124, 0.25);
+            padding: 30px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(90deg, #1b437c, #7493af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1b437c;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f0f4f8;
+        }
+
+        tr:hover {
+            background-color: #d6e0f0;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-travailler {
+            background-color: #1b437c;
+            color: white;
+            padding: 8px 18px;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .btn-travailler:hover {
+            background-color: #7493af;
+            transform: scale(1.05);
+        }
+
+        .top-nav {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .home-link {
+            background-color: #1b437c;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 25px;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 10px rgba(27, 67, 124, 0.15);
+            display: inline-block;
+        }
+
+        .home-link:hover {
+            background-color: #7493af;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Liste des Tâches à Annoter</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom du Dataset</th>
+            <th>Date Limite</th>
+            <th>Avancement</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tache : ${taches}">
+            <td th:text="${tache.id}">1</td>
+            <td th:text="${tache.dataset != null} ? ${tache.dataset.nomDataset} : 'N/A'">Nom du Dataset</td>
+            <td th:text="${tache.dateAffectation != null ? #temporals.format(tache.dateAffectation.plusDays(30), 'dd/MM/yyyy') : 'Date inconnue'}">20/06/2025</td>
+            <td th:text="${tache.avancement + '%'}">0%</td>
+            <td>
+                <a th:href="@{'/annotation/annotateurs/' + ${tache.annotateur.id} + '/' + ${tache.dataset.id}}"
+                   class="btn-travailler">
+                    Travailler
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="top-nav">
+        <a th:href="@{/annotateurs/index}" class="home-link">🏠 Accueil</a>
+    </div>
+</div>
+</body>
+</html>

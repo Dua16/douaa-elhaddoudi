@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Page d'Annotation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 40px 0;
+      background: linear-gradient(135deg, #7493af 0%, #1b437c 100%);
+      color: #1b437c;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(27, 67, 124, 0.3);
+      padding: 30px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      background: linear-gradient(90deg, #1b437c, #7493af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-radius: 12px;
+      overflow: hidden;
+      background-color: #fff;
+      animation: fadeIn 1s ease-in;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #1b437c;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f3f7fb;
+    }
+
+    tr:hover td {
+      background-color: #e0ecf5;
+      transition: 0.3s ease-in-out;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #1b437c, #7493af);
+      color: white;
+      padding: 8px 18px;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #2d4e7c, #89a3bb);
+      transform: scale(1.05);
+    }
+
+    select {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      margin-right: 10px;
+    }
+
+    .annotated {
+      color: #2e7d32;
+      font-weight: bold;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    .pagination {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .pagination a, .pagination span {
+      display: inline-block;
+      margin: 0 4px;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 50px;
+      text-decoration: none;
+      color: #1b437c;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .pagination a:hover {
+      background-color: #d4e4f1;
+    }
+
+    .pagination .current {
+      background-color: #1b437c;
+      color: white;
+      cursor: default;
+      box-shadow: 0 0 8px #1b437c;
+    }
+
+    .top-nav {
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .home-link {
+      background-color: #1b437c;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 25px;
+      transition: background-color 0.3s, transform 0.3s;
+      box-shadow: 0 4px 10px rgba(27, 67, 124, 0.15);
+      display: inline-block;
+    }
+
+    .home-link:hover {
+      background-color: #7493af;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>📝 Annotation des Couples de Textes</h1>
+
+  <table>
+    <thead>
+    <tr>
+      <th>ID Couple</th>
+      <th>Texte 1</th>
+      <th>Texte 2</th>
+      <th>Classe Choisie & Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="couple : ${couples.content}">
+      <td th:text="${couple.id}">1</td>
+      <td th:text="${couple.texte1}">Texte 1</td>
+      <td th:text="${couple.texte2}">Texte 2</td>
+      <td>
+        <div th:if="${#lists.contains(couplesAnnotes, couple.id)}" class="annotated">
+          Annoté ✅
+        </div>
+        <form th:if="${!#lists.contains(couplesAnnotes, couple.id)}"
+              th:action="@{/annotation/annotateurs/soumettre}" method="post">
+          <input type="hidden" name="annotateurId" th:value="${annotateurId}" />
+          <input type="hidden" name="coupleTexteId" th:value="${couple.id}" />
+          <input type="hidden" name="datasetId" th:value="${datasetId}" />
+          <select name="classeChoisie" required>
+            <option value="" disabled selected>--Choisir une classe--</option>
+            <option th:each="classe : ${classes}"
+                    th:value="${classe.textClasse}"
+                    th:text="${classe.textClasse}">Classe</option>
+          </select>
+          <button type="submit" class="btn-submit">Soumettre</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- PAGINATION -->
+  <div class="pagination" th:with="
+        currentPage=${couples.number},
+        totalPages=${couples.totalPages},
+        start=${T(java.lang.Math).max(0, currentPage - 5)},
+        end=${T(java.lang.Math).min(totalPages - 1, currentPage + 4)},
+        pageCount=${end - start + 1},
+        adjustedStart=${pageCount < 10 ? T(java.lang.Math).max(0, end - 9) : start},
+        adjustedEnd=${pageCount < 10 ? T(java.lang.Math).min(totalPages - 1, adjustedStart + 9) : end}
+      ">
+    <a th:if="${couples.hasPrevious()}"
+       th:href="@{/annotation/annotateurs/{annotateurId}/{datasetId}(annotateurId=${annotateurId}, datasetId=${datasetId}, page=${couples.number - 1})}">
+      ⬅ Précédent
+    </a>
+
+    <span th:each="i : ${#numbers.sequence(adjustedStart, adjustedEnd)}">
+      <a th:if="${i != currentPage}"
+         th:href="@{/annotation/annotateurs/{annotateurId}/{datasetId}(annotateurId=${annotateurId}, datasetId=${datasetId}, page=${i})}"
+         th:text="${i + 1}">1</a>
+      <span th:if="${i == currentPage}" class="current" th:text="${i + 1}">1</span>
+    </span>
+
+    <a th:if="${couples.hasNext()}"
+       th:href="@{/annotation/annotateurs/{annotateurId}/{datasetId}(annotateurId=${annotateurId}, datasetId=${datasetId}, page=${couples.number + 1})}">
+      Suivant ➡
+    </a>
+  </div>
+
+  <div class="top-nav">
+    <a th:href="@{/annotateurs/index}" class="home-link">🏠 Accueil</a>
+  </div>
+</div>
+</body>
+</html>

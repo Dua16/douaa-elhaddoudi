@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Connexion</title>
+
+    <style>
+        /* Reset minimal */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #7493af 0%, #1b437c 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #1b437c;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px 35px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(27, 67, 124, 0.3);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            animation: fadeInScale 0.8s ease forwards;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 28px;
+            background: linear-gradient(90deg, #1b437c, #7493af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            user-select: none;
+            animation: slideInDown 1s ease forwards;
+        }
+
+        form div {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1b437c;
+            user-select: none;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #7493af;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            color: #1b437c;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #1b437c;
+            outline: none;
+            box-shadow: 0 0 8px rgba(27, 67, 124, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #1b437c;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 6px 20px rgba(27, 67, 124, 0.4);
+            user-select: none;
+        }
+
+        button:hover {
+            background-color: #7493af;
+            box-shadow: 0 8px 25px rgba(116, 147, 175, 0.7);
+            transform: scale(1.05);
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .error {
+            color: #a83232;
+        }
+
+        .success {
+            color: #1a5f34;
+        }
+
+        /* Animations clés */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInDown {
+            0% {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .login-container {
+                padding: 30px 20px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+            input[type="text"],
+            input[type="password"] {
+                font-size: 14px;
+                padding: 10px 12px;
+            }
+            button {
+                font-size: 15px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="login-container">
+    <h2>Connexion</h2>
+    <form th:action="@{/login}" method="post">
+        <div>
+            <label for="username">Nom d’utilisateur :</label>
+            <input type="text" id="username" name="username" required autocomplete="username" />
+        </div>
+        <div>
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password" />
+        </div>
+        <div>
+            <button type="submit">Se connecter</button>
+        </div>
+        <div th:if="${param.error}" class="message error">
+            Nom d’utilisateur ou mot de passe invalide.
+        </div>
+        <div th:if="${param.logout}" class="message success">
+            Vous avez été déconnecté avec succès.
+        </div>
+    </form>
+</div>
+</body>
+</html>

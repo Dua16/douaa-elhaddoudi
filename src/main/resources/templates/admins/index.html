@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Tableau de bord Admin</title>
+
+    <!-- Bootstrap + Icônes -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+
+    <style>
+        /* Fond dégradé bleu clair */
+        body {
+            background: linear-gradient(135deg, #7493af 0%, #1b437c 100%);
+            color: #1b437c;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 1000px;
+            animation: fadeInScale 0.8s ease forwards;
+        }
+
+        /* Carte blanche avec ombre et coins arrondis */
+        .dashboard-header, .card {
+            background: white;
+            color: #1b437c;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(27, 67, 124, 0.3);
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            user-select: none;
+            text-align: center;
+        }
+
+        /* Header spécifique */
+        .dashboard-header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(90deg, #1b437c, #1b437c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            user-select: none;
+            animation: slideInDown 1s ease forwards;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-top: 0;
+            color: #3b5d8a;
+            user-select: none;
+        }
+
+        /* Style des cartes du dashboard */
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            cursor: pointer;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 35px 20px;
+            font-weight: 600;
+            color: #1b437c;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(27, 67, 124, 0.15);
+            user-select: none;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(27, 67, 124, 0.35);
+        }
+
+        /* Icones grandes */
+        .card i {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            color: #1b437c;
+            transition: color 0.3s ease;
+        }
+        .card:hover i {
+            color: #7493af;
+        }
+
+        /* Boutons */
+        .card a.btn {
+            margin-top: 12px;
+            font-weight: 600;
+            border-radius: 50px;
+            padding: 8px 28px;
+            color: #1b437c;
+            border: 2px solid #7493af;
+            background: white;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        .card a.btn:hover {
+            background: #7493af;
+            color: white;
+            text-decoration: none;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(27, 67, 124, 0.4);
+        }
+
+        /* Couleurs spécifiques par fonction */
+        .card-primary { border-color: #1b437c; }
+        .card-success { border-color: #2d8a4e; }
+        .card-warning { border-color: #ca8a00; }
+        .card-danger  { border-color: #b42318; }
+        .card-dark    { border-color: #343a40; }
+
+        /* Déconnexion bouton */
+        .logout-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .logout-btn a {
+            font-weight: 600;
+            border-radius: 50px;
+            padding: 10px 35px;
+            color: #b42318;
+            border: 2px solid #b42318;
+            background: white;
+            transition: all 0.3s ease;
+            user-select: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .logout-btn a:hover {
+            background: #b42318;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(180, 35, 24, 0.5);
+        }
+
+        /* Animations clés */
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInDown {
+            0% {
+                transform: translateY(-40px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="dashboard-container">
+
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1><i class="bi bi-speedometer2"></i> Tableau de bord Admin</h1>
+        <p>Gérez vos annotateurs et vos données textuelles efficacement</p>
+    </div>
+
+    <!-- Cartes -->
+    <div class="dashboard-row">
+        <!-- Gestion Annotateurs -->
+        <div class="card card-primary">
+            <i class="bi bi-person-lines-fill"></i>
+            <h5>Gérer les Annotateurs</h5>
+            <a th:href="@{/admins/annotateurs}" class="btn">Créer / Modifier / Supprimer</a>
+        </div>
+
+        <!-- Importer Textes -->
+        <div class="card card-success">
+            <i class="bi bi-upload"></i>
+            <h5>Importer des Textes</h5>
+            <a th:href="@{/admins/importer}" class="btn">Importer CSV / JSON</a>
+        </div>
+
+        <!-- Attribution automatique -->
+        <div class="card card-warning">
+            <i class="bi bi-shuffle"></i>
+            <h5>Attribution automatique</h5>
+            <a th:href="@{/admins/attribution_form}" class="btn">Associer textes aux annotateurs</a>
+        </div>
+
+        <!-- Exporter résultats -->
+        <div class="card card-dark">
+            <i class="bi bi-download"></i>
+            <h5>Exporter les Résultats</h5>
+            <a th:href="@{/admins/export_page}" class="btn">Télécharger CSV / JSON</a>
+        </div>
+
+        <!-- Annotateurs désactivés -->
+        <div class="card card-danger">
+            <i class="bi bi-person-x"></i>
+            <h5>Annotateurs désactivés</h5>
+            <a th:href="@{/admins/annotateurs/desactives}" class="btn">Voir / Activer</a>
+        </div>
+    </div>
+
+    <!-- Bouton déconnexion -->
+    <div class="logout-btn">
+        <a th:href="@{/login}">
+            <i class="bi bi-box-arrow-right"></i> Se déconnecter
+        </a>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard Annotateur</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        body {
+            background: linear-gradient(135deg, #7493af 0%, #7493af 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 40px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            background: white;
+            max-width: 900px;
+            width: 100%;
+            border-radius: 25px;
+            padding: 30px 40px;
+            box-shadow: 0 12px 30px rgba(116, 147, 175, 0.5);
+            animation: fadeInScale 0.5s ease forwards;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(90deg, #7493af, #1b437c);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(27, 67, 124, 0.5);
+        }
+
+        .dashboard-header h1 {
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dashboard-header p.lead {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .card {
+            cursor: pointer;
+            border-radius: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 15px rgba(116, 147, 175, 0.25);
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(27, 67, 124, 0.5);
+        }
+
+        .card.text-bg-success {
+            background: linear-gradient(135deg, rgba(116, 147, 175, 0.5), rgba(116, 147, 175, 0.5));
+            color: white;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .card-body i {
+            font-size: 4.5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: center;
+            max-width: 240px;
+        }
+
+        .btn-logout {
+            background: linear-gradient(45deg, #b71c1c, #7f1212);
+            color: white;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 15px #7f1212;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-logout:hover {
+            background: linear-gradient(45deg, #7f1212, #4b0c0c);
+            color: white;
+            box-shadow: 0 12px 30px #4b0c0c;
+            transform: translateY(-3px) scale(1.05);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1><i class="bi bi-journal-text"></i> Tableau de bord Annotateur</h1>
+        <p class="lead">Bienvenue, <span th:text="${annotateurNom}">Utilisateur</span> !</p>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="row g-4 justify-content-center">
+        <!-- Annoter un texte (redirection vers annotation) -->
+        <div class="col-md-4">
+            <a th:href="@{/annotateurs/taches}" class="text-decoration-none">
+                <div class="card text-bg-success shadow">
+                    <div class="card-body text-center">
+                        <i class="bi bi-pencil-square"></i>
+                        <h5 class="card-title mt-3">Annoter un texte</h5>
+                        <p class="card-text">Sélectionnez la classe et sauvegardez votre annotation</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Bouton déconnexion -->
+    <div class="text-center mt-5">
+        <a th:href="@{/login}" class="btn btn-logout btn-lg">
+            <i class="bi bi-box-arrow-right"></i> Se déconnecter
+        </a>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
